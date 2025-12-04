@@ -1,0 +1,110 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load plotly_dash %}
+
+{% block title %}Visualization Tutorials{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Page Header -->
+    <header class="text-center mb-4">
+        <h1 class="display-5">Visualization Tutorials</h1>
+        <p class="lead">Choose your level to explore interactive visualizations and tutorials.</p>
+    </header>
+
+    <!-- Tabs for Skill Levels -->
+    <ul class="nav nav-pills mb-4 justify-content-center" id="skillLevelTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="beginners-tab" data-bs-toggle="pill" data-bs-target="#beginners" type="button" role="tab" aria-controls="beginners" aria-selected="true">Beginners</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="intermediate-tab" data-bs-toggle="pill" data-bs-target="#intermediate" type="button" role="tab" aria-controls="intermediate" aria-selected="false">Intermediate</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="advanced-tab" data-bs-toggle="pill" data-bs-target="#advanced" type="button" role="tab" aria-controls="advanced" aria-selected="false">Advanced</button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="skillLevelTabContent">
+        <!-- Beginners Section -->
+        <div class="tab-pane fade show active" id="beginners" role="tabpanel" aria-labelledby="beginners-tab">
+            <h4 class="text-center">Beginner Tutorials</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Bar Charts</h5>
+                            <p class="card-text">Learn how to create and customize basic bar charts.</p>
+                            <a href="{% url 'tutorial_beginners_bar' %}" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Line Graphs</h5>
+                            <p class="card-text">Understand trends over time with line graphs.</p>
+                            <a href="{% url 'tutorial_beginners_line' %}" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intermediate Section -->
+        <div class="tab-pane fade" id="intermediate" role="tabpanel" aria-labelledby="intermediate-tab">
+            <h4 class="text-center">Intermediate Tutorials</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Histograms</h5>
+                            <p class="card-text">Visualize distributions with histograms.</p>
+                            <a href="{% url 'tutorial_intermediate_histogram' %}" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Scatter Plots</h5>
+                            <p class="card-text">Analyze relationships between variables.</p>
+                            <a href="{% url 'tutorial_intermediate_scatter' %}" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Section -->
+        <div class="tab-pane fade" id="advanced" role="tabpanel" aria-labelledby="advanced-tab">
+            <h4 class="text-center">Advanced Tutorials</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Network Graphs</h5>
+                            <p class="card-text">Explore relationships with network visualizations.</p>
+                            <a href="{% url 'tutorial_advanced_network' %}" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">3D Plots</h5>
+                            <p class="card-text">Visualize data in three dimensions.</p>
+                            <a href="{% url 'tutorial_advanced_3d' %}" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Popper for Tab Navigation -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+

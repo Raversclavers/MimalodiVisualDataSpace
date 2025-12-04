@@ -1,0 +1,9 @@
+{% extends 'core/base.html' %}
+{% load plotly_dash %}
+
+{% block title %}Analytics Dashboard - Mimalodi Visual Data Space{% endblock %}
+
+{% block content %}
+<h1>Analytics Dashboard</h1>
+{% plotly_app name="AnalyticsDashboard" %}
+{% endblock %}

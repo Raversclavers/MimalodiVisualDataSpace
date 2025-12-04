@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+{% load static %}  <!-- Load static files -->
+
+{% block title %}About Us - Mimalodi Visual Data Space{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1 class="display-4">Empowering Data Exploration</h1>
+        <p class="lead">At Mimalodi Visual Data Space, we believe in the transformative power of data. Our platform is designed to help you unlock insights and make informed decisions.</p>
+    </header>
+
+    <!-- Mission Statement Section -->
+    <section class="mb-5">
+        <div class="text-center">
+            <h2 class="text-primary">Our Mission</h2>
+            <p class="mt-3">
+                To democratize data by providing accessible, engaging, and powerful visualization tools. 
+                Our goal is to simplify complex data, making it actionable and insightful for individuals and organizations alike.
+            </p>
+        </div>
+    </section>
+
+    <!-- Features and Services Section -->
+    <section class="mb-5">
+        <h2 class="text-primary text-center">What We Offer</h2>
+        <div class="row mt-4">
+            <div class="col-md-4 text-center">
+                <div class="card shadow-sm border-primary">
+                    <img src="{% static 'images/data.jpg' %}" alt="Tutorials" class="card-img-top rounded-top">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Step-by-Step Tutorials</h5>
+                        <p class="card-text">
+                            Master data visualization techniques with our structured and beginner-friendly tutorials.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="card shadow-sm border-primary">
+                    <img src="{% static 'images/multiplot.jpg' %}" alt="Dashboards" class="card-img-top rounded-top">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Interactive Dashboards</h5>
+                        <p class="card-text">
+                            Explore dynamic dashboards designed to provide real-time insights and analytics.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="card shadow-sm border-primary">
+                    <img src="{% static 'images/line graph.jpg' %}" alt="Reports" class="card-img-top rounded-top">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">In-Depth Reports</h5>
+                        <p class="card-text">
+                            Leverage our comprehensive data analyses and reports to guide your strategies effectively.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community and Vision Section -->
+    <section class="mb-5 text-center">
+        <h2 class="text-primary">Our Vision</h2>
+        <p class="mt-3">
+            We aspire to create a global community of data enthusiasts who leverage the power of data to drive 
+            meaningful change. By sharing knowledge and tools, we aim to foster innovation and informed decision-making.
+        </p>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="text-center bg-light py-5">
+        <h2 class="text-primary">Get Involved Today</h2>
+        <p class="mt-3">
+            Explore our tutorials, engage with our interactive dashboards, and join a vibrant community of data enthusiasts.
+            Let’s transform the way we understand and use data together!
+        </p>
+        <a href="{% url 'contact' %}" class="btn btn-primary btn-lg mt-3">Contact Us</a>
+    </section>
+</div>
+{% endblock %}

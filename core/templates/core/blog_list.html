@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Blog - Mimalodi Visual Data Space{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1 class="display-4">Our Blog</h1>
+        <p class="lead">Stay updated with the latest in data visualization, analytics, and trends shaping the world of data.</p>
+    </header>
+
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <img src="{{ post.thumbnail.url }}" class="card-img-top" alt="{{ post.title }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-primary">{{ post.title }}</h5>
+                    <p class="card-text text-muted">{{ post.excerpt }}</p>
+                    <div class="mt-auto">
+                        <a href="{% url 'blog_detail' post.slug %}" class="btn btn-outline-primary">Read More</a>
+                    </div>
+                </div>
+                <div class="card-footer text-muted small">
+                    Posted on {{ post.created_at|date:"M d, Y" }} by {{ post.author }}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-muted">No blog posts found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

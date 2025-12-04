@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Network Graphs - Advanced Tutorial{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1 class="display-5">Network Graphs Tutorial</h1>
+        <p class="lead">Explore relationships with network visualizations and graph theory.</p>
+    </header>
+    <div>
+        <h3>What You'll Learn</h3>
+        <ul>
+            <li>How to create a network graph in Python</li>
+            <li>Adding nodes, edges, and labels</li>
+            <li>Customizing graph layouts and styles</li>
+        </ul>
+        <h3>Step-by-Step Guide</h3>
+        <ol>
+            <li>Install the <code>networkx</code> and <code>matplotlib</code> libraries.</li>
+            <li>Define your graph data (nodes and edges).</li>
+            <li>Visualize your network using <code>networkx.draw()</code>.</li>
+        </ol>
+        <a href="#" class="btn btn-primary">Download Code Example</a>
+    </div>
+</div>
+{% endblock %}

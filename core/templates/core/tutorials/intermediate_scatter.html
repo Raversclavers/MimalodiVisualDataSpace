@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Scatter Plots - Intermediate Tutorial{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1 class="display-5">Scatter Plots Tutorial</h1>
+        <p class="lead">Discover how to analyze relationships between variables using scatter plots.</p>
+    </header>
+    <div>
+        <h3>What You'll Learn</h3>
+        <ul>
+            <li>Creating scatter plots using Python</li>
+            <li>Adding labels, colors, and markers</li>
+            <li>Customizing the appearance for better insights</li>
+        </ul>
+        <h3>Step-by-Step Guide</h3>
+        <ol>
+            <li>Install required libraries (e.g., Matplotlib, Seaborn).</li>
+            <li>Prepare your dataset with two numeric variables.</li>
+            <li>Create a scatter plot using <code>plt.scatter()</code> or Seaborn's <code>sns.scatterplot()</code>.</li>
+        </ol>
+        <a href="#" class="btn btn-primary">Download Code Example</a>
+    </div>
+</div>
+{% endblock %}

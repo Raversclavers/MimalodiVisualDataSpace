@@ -1,0 +1,127 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block title %}Home - Mimalodi Visual Data Space{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1 class="display-4">Mimalodi Visual Data Space</h1>
+        <p class="lead">Your gateway to insightful data visualization and analysis.</p>
+    </header>
+
+    <section class="mb-5">
+        <h2 class="text-primary">Explore the Universe of Data</h2>
+        <img src="{% static 'images/galaxy.jpg' %}" alt="Galaxy" class="img-fluid rounded" style="max-height: 800px; object-fit: cover;" />
+        <p>This stunning image of a galaxy represents the vastness of data we aim to explore and visualize.</p>
+    </section>
+
+    <!-- Hero Section -->
+    <div class="hero bg-light text-dark py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mx-auto text-center">
+                    <h2 class="display-4">Discover Insights</h2>
+                    <p class="lead">Explore insightful data visualizations and interactive dashboards.</p>
+                    <a href="{% url 'blog_list' %}" class="btn btn-primary btn-lg mt-3">Explore Our Blog</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Us Section -->
+    <div class="container mt-5">
+        <h2>About Us</h2>
+        <p>Learn more about our mission to simplify data through engaging tutorials, interactive dashboards, and practical insights.</p>
+        <a href="{% url 'about' %}" class="btn btn-secondary">Learn More</a>
+    </div>
+
+    <!-- Featured Tutorials Section -->
+<div class="container mt-5">
+    <h2>Featured Tutorials</h2>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{% static 'images/data.jpg' %}" class="card-img-top" alt="Getting Started with Data Analysis" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">Getting Started with Data Analysis</h5>
+                    <p class="card-text">Learn the foundations of data analysis with Python libraries like Pandas and NumPy.</p>
+                    <a href="/tutorials/getting-started-data-analysis" class="btn btn-primary">View Tutorial</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{% static 'images/multiplot.jpg' %}" class="card-img-top" alt="Interactive Visualizations with Plotly/Dash" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">Interactive Visualizations with Plotly/Dash</h5>
+                    <p class="card-text">Learn how to create interactive dashboards and visualizations.</p>
+                    <a href="/tutorials/interactive-dashboards" class="btn btn-primary">View Tutorial</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{% static 'images/line graph.jpg' %}" class="card-img-top" alt="Deploying Data Dashboards" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">Deploying Data Dashboards</h5>
+                    <p class="card-text">Learn how to deploy your dashboards online using modern tools.</p>
+                    <a href="/tutorials/deploying-dashboards" class="btn btn-primary">View Tutorial</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Latest Blog Posts Section as Cards -->
+    <div class="container mt-5">
+        <h2>Latest Blog Posts</h2>
+        <div class="row">
+            {% for post in blog_posts %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ post.thumbnail.url }}" class="card-img-top" alt="{{ post.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.excerpt }}</p>
+                        <a href="{% url 'blog_detail' post.id %}" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <!-- User Testimonials Section -->
+    <div class="container mt-5">
+        <h2>User Testimonials</h2>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <p class="card-text">"Mimalodi Visual Data Space has transformed the way I analyze data. The tutorials are easy to follow and very informative!"</p>
+                        <footer class="blockquote-footer">Elise Malon</footer>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <p class="card-text">"The interactive dashboards are a game-changer! I can visualize my data like never before."</p>
+                        <footer class="blockquote-footer">Risper Wambui</footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action Section -->
+    <div class="container mt-5 text-center">
+        <h2>Join Us Today!</h2>
+        <p>Sign up now to access exclusive tutorials and resources.</p>
+        <a href="{% url 'signup' %}" class="btn btn-success btn-lg">Sign Up</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ post.title }} - Mimalodi Visual Data Space{% endblock %}
+
+{% block content %}
+<h1>{{ post.title }}</h1>
+<p>{{ post.created_at|date:"F d, Y" }}</p>
+<div>
+    {{ post.content|linebreaks }}
+</div>
+{% endblock %}
