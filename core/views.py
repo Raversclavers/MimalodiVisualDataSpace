@@ -241,7 +241,6 @@ def tutorials(request):
         "core/tutorials.html",
         {
             "tutorials": Tutorial.objects.all(),
-            "tutorial_tracks": _tutorial_tracks(),
             "featured_services": _published_services()[:2],
         },
     )
@@ -273,32 +272,6 @@ def tutorial_advanced_3d(request):
 
 def _published_services():
     return Service.objects.filter(is_published=True).prefetch_related("deliverables", "case_studies__metrics")
-
-
-def _tutorial_tracks():
-    return [
-        {
-            "level": "Beginner",
-            "title": "Foundations for chart literacy and analysis basics",
-            "description": "Start with approachable chart-building lessons that make it easier to move from raw rows to a visual explanation.",
-            "url_name": "tutorial_beginners_bar",
-            "topics": ["Bar charts", "Line charts", "Basic chart structure"],
-        },
-        {
-            "level": "Intermediate",
-            "title": "Interactive and distribution-focused analysis",
-            "description": "Build confidence with more analytical chart forms and the logic behind exploratory data storytelling.",
-            "url_name": "tutorial_intermediate_histogram",
-            "topics": ["Histograms", "Scatter plots", "Interactive analysis"],
-        },
-        {
-            "level": "Advanced",
-            "title": "Complex visual systems and network thinking",
-            "description": "Explore advanced chart structures and visual systems that support strategic reporting or technical presentations.",
-            "url_name": "tutorial_advanced_network",
-            "topics": ["Network graphs", "3D views", "Presentation-ready visuals"],
-        },
-    ]
 
 
 def _profile_completion_score(user, profile):

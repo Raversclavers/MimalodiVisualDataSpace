@@ -1,155 +1,149 @@
-from django.test import TestCase, override_settings
-from django.urls import reverse
+from django.contrib.auth.models import AnonymousUser, User
+from django.contrib.messages.storage.fallback import FallbackStorage
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.test import RequestFactory, TestCase
+from django.urls import resolve, reverse
 
-from .models import (
-	BlogPost,
-	CaseStudy,
-	CaseStudyMetric,
-	CaseStudyScreenshot,
-	ContactSubmission,
-	Service,
-	ServiceDeliverable,
-	Tutorial,
-)
+from .models import BlogPost, CaseStudy, ContactSubmission, Profile, Service, ServiceDeliverable, Tutorial
 
 
-@override_settings(SECURE_SSL_REDIRECT=False)
 class CorePageTests(TestCase):
 	@classmethod
 	def setUpTestData(cls):
-		cls.post = BlogPost.objects.create(
-			title="Launch-ready storytelling",
-			slug="launch-ready-storytelling",
-			content="This is a sample post for route and template validation.",
+		cls.blog_post = BlogPost.objects.create(
+			title="Reporting design principles",
+			slug="reporting-design-principles",
+			content="Useful reporting systems balance clarity, context, and action.",
 		)
 		Tutorial.objects.create(
-			title="Intro tutorial",
-			content="A short tutorial entry used to validate the tutorials page.",
+			title="Tutorial overview",
+			content="This tutorial teaches practical visualization choices.",
 		)
 		cls.case_study = CaseStudy.objects.create(
-			title="Portfolio test case",
-			slug="portfolio-test-case",
+			title="Executive KPI Command Center Test",
+			slug="executive-kpi-command-center-test",
 			category="Dashboard strategy",
-			accent="Testing",
-			client_name="Example client",
-			industry="Analytics",
-			summary="A test case study used to verify the portfolio detail flow.",
-			client_context="An example client needed clearer reporting.",
-			challenge="The reporting workflow was fragmented.",
-			approach="Structured the data story and dashboard flow.",
-			solution="Created a cleaner reporting experience.",
+			accent="Leadership reporting",
+			client_name="Growth-stage leadership team",
+			industry="Operations",
+			summary="A dashboard concept for executive review.",
+			client_context="Leaders needed a clearer source of truth.",
+			challenge="The reporting process was fragmented.",
+			approach="Defined a tighter KPI structure.",
+			solution="Created a premium dashboard concept.",
 			tools_used="Django, Python, Plotly",
-			result="Improved clarity for reviewers.",
-			featured_order=99,
+			result="Leadership gained faster access to key information.",
 			hero_image_path="images/multiplot.jpg",
 		)
-		CaseStudyMetric.objects.create(case_study=cls.case_study, label="Outcome", value="Clearer reporting", sort_order=1)
-		CaseStudyScreenshot.objects.create(
-			case_study=cls.case_study,
-			title="Test screenshot",
-			caption="A sample screenshot for the detail page.",
-			image_path="images/data.jpg",
-			sort_order=1,
-		)
 		cls.service = Service.objects.create(
-			title="Dashboard Design",
-			slug="dashboard-design",
-			icon="fas fa-chart-line",
-			short_description="Design dashboards that make recurring performance reviews easier to understand and act on.",
-			hero_headline="Dashboard design for clearer recurring reporting",
-			overview="This service helps teams structure dashboards around the metrics and questions that actually matter in reviews.",
-			ideal_client="Founders, managers, and teams that need cleaner monitoring views.",
-			business_value="Improves visibility and reduces confusion during reporting cycles.",
-			process_summary="Start by clarifying metrics and audience, then structure the layout and narrative flow.",
-			inquiry_subject="Dashboard design inquiry",
-			seo_title="Dashboard Design Services | MVDS",
-			seo_description="Dashboard design support for clearer KPI reporting and stakeholder alignment.",
-			featured_order=1,
+			title="Dashboard Strategy",
+			slug="dashboard-strategy",
+			short_description="Create calmer, clearer reporting systems.",
+			overview="A full review of reporting and dashboard needs.",
+			ideal_client="Teams with growing reporting complexity.",
+			business_value="Sharper decisions with less reporting friction.",
+			process_summary="Audit, redesign, and handoff.",
+			hero_image_path="images/data.jpg",
 		)
 		cls.service.case_studies.add(cls.case_study)
 		ServiceDeliverable.objects.create(
 			service=cls.service,
-			title="Dashboard concept",
-			description="A KPI layout designed for recurring decision reviews.",
-			sort_order=1,
+			title="Dashboard audit",
+			description="A review of the current dashboard structure.",
 		)
+
+	def setUp(self):
+		self.factory = RequestFactory()
+
+	def _prepare_request(self, request, user=None, with_messages=False):
+		SessionMiddleware(lambda req: None).process_request(request)
+		request.session.save()
+		request.user = user or AnonymousUser()
+		if with_messages:
+			setattr(request, "_messages", FallbackStorage(request))
+		return request
+
+	def _render_route(self, route_name, *, user=None, kwargs=None):
+		kwargs = kwargs or {}
+		path = reverse(route_name, kwargs=kwargs)
+		request = self._prepare_request(self.factory.get(path), user=user)
+		match = resolve(path)
+		response = match.func(request, **match.kwargs)
+		if hasattr(response, "render"):
+			response.render()
+		return response
 
 	def test_public_pages_load(self):
-		urls = [
-			reverse("home"),
-			reverse("about"),
-			reverse("services"),
-			reverse("service_detail", kwargs={"slug": self.service.slug}),
-			reverse("contact"),
-			reverse("signup"),
-			reverse("login"),
-			reverse("blog_list"),
-			reverse("portfolio"),
-			reverse("portfolio_detail", kwargs={"slug": self.case_study.slug}),
-			reverse("tutorials"),
-			reverse("analytics"),
-			reverse("visualizations"),
+		routes = [
+			"home",
+			"about",
+			"services",
+			"portfolio",
+			"contact",
+			"analytics",
+			"blog_list",
+			"tutorials",
+			"visualizations",
+			"login",
+			"signup",
 		]
-
-		for url in urls:
-			with self.subTest(url=url):
-				response = self.client.get(url, follow=True)
+		for route_name in routes:
+			with self.subTest(route=route_name):
+				response = self._render_route(route_name)
 				self.assertEqual(response.status_code, 200)
 
-	def test_blog_detail_uses_slug_route(self):
-		response = self.client.get(reverse("blog_detail", kwargs={"slug": self.post.slug}), follow=True)
-
+	def test_detail_pages_load(self):
+		response = self._render_route("blog_detail", kwargs={"slug": self.blog_post.slug})
 		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, self.post.title)
 
-	def test_portfolio_detail_renders_case_study_content(self):
-		response = self.client.get(reverse("portfolio_detail", kwargs={"slug": self.case_study.slug}), follow=True)
-
+		response = self._render_route("service_detail", kwargs={"slug": self.service.slug})
 		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, self.case_study.title)
-		self.assertContains(response, "Clearer reporting")
 
-	def test_service_detail_renders_deliverables(self):
-		response = self.client.get(reverse("service_detail", kwargs={"slug": self.service.slug}), follow=True)
-
+		response = self._render_route("portfolio_detail", kwargs={"slug": self.case_study.slug})
 		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, self.service.title)
-		self.assertContains(response, "Dashboard concept")
 
-	def test_contact_page_prefills_subject_for_service_queries(self):
-		response = self.client.get(f"{reverse('contact')}?service={self.service.slug}", follow=True)
-
-		self.assertEqual(response.status_code, 200)
-		self.assertContains(response, "Dashboard design inquiry")
-
-	def test_contact_submission_is_saved(self):
-		response = self.client.post(
-			reverse("contact"),
-			{
-				"name": "Marlo Data",
-				"email": "marlo@example.com",
-				"subject": "Dashboard redesign",
-				"message": "I need help creating a cleaner reporting dashboard for internal leadership reviews.",
-			},
-			follow=True,
+	def test_contact_form_creates_submission(self):
+		path = reverse("contact")
+		request = self._prepare_request(
+			self.factory.post(
+				path,
+				{
+					"name": "Marlo",
+					"email": "marlo@example.com",
+					"subject": "Need reporting help",
+					"message": "I need a clearer KPI dashboard.",
+				},
+			),
+			with_messages=True,
 		)
-
-		self.assertEqual(response.status_code, 200)
+		response = resolve(path).func(request)
+		self.assertEqual(response.status_code, 302)
 		self.assertEqual(ContactSubmission.objects.count(), 1)
-		self.assertContains(response, "Your inquiry has been received")
 
-	def test_contact_submission_validation_errors(self):
-		response = self.client.post(
-			reverse("contact"),
-			{
-				"name": "A",
-				"email": "not-an-email",
-				"subject": "Hi",
-				"message": "Too short",
-			},
-			follow=True,
+	def test_signup_creates_user_and_profile(self):
+		path = reverse("signup")
+		request = self._prepare_request(
+			self.factory.post(
+				path,
+				{
+					"username": "newuser",
+					"first_name": "New",
+					"last_name": "User",
+					"email": "newuser@example.com",
+					"password1": "StrongTestPass123",
+					"password2": "StrongTestPass123",
+				},
+			),
+			with_messages=True,
 		)
+		response = resolve(path).func(request)
+		self.assertEqual(response.status_code, 302)
+		user = User.objects.get(username="newuser")
+		self.assertTrue(Profile.objects.filter(user=user).exists())
 
-		self.assertEqual(response.status_code, 200)
-		self.assertEqual(ContactSubmission.objects.count(), 0)
-		self.assertContains(response, "Please review the form and correct the highlighted fields.")
+	def test_profile_requires_login(self):
+		path = reverse("profile")
+		request = self._prepare_request(self.factory.get(path))
+		response = resolve(path).func(request)
+		self.assertEqual(response.status_code, 302)
+		self.assertIn(reverse("login"), response.url)

@@ -27,11 +27,13 @@ class BlogPost(models.Model):
 
     @property
     def excerpt(self):
-        words = self.content.split()
-        preview = " ".join(words[:30])
-        if len(words) > 30:
-            return f"{preview}..."
-        return preview
+        preview = self.content.strip()
+        if len(preview) <= 180:
+            return preview
+        return f"{preview[:177].rstrip()}..."
+
+    def get_absolute_url(self):
+        return reverse("blog_detail", kwargs={"slug": self.slug})
 
 
 class Tutorial(models.Model):
@@ -88,12 +90,12 @@ class CaseStudy(models.Model):
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self):
-        return reverse("portfolio_detail", kwargs={"slug": self.slug})
-
     @property
     def tools_list(self):
         return [tool.strip() for tool in self.tools_used.split(",") if tool.strip()]
+
+    def get_absolute_url(self):
+        return reverse("portfolio_detail", kwargs={"slug": self.slug})
 
 
 class CaseStudyMetric(models.Model):
@@ -142,8 +144,8 @@ class Service(models.Model):
     featured_order = models.PositiveSmallIntegerField(default=0)
     hero_image = models.ImageField(upload_to="services/", blank=True, null=True)
     hero_image_path = models.CharField(max_length=255, blank=True)
-    case_studies = models.ManyToManyField(CaseStudy, related_name="related_services", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    case_studies = models.ManyToManyField(CaseStudy, blank=True, related_name="related_services")
 
     class Meta:
         ordering = ["featured_order", "title"]
@@ -151,24 +153,20 @@ class Service(models.Model):
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self):
-        return reverse("service_detail", kwargs={"slug": self.slug})
-
-    @property
-    def contact_subject(self):
-        return self.inquiry_subject or f"Inquiry about {self.title}"
-
     @property
     def display_headline(self):
         return self.hero_headline or self.title
 
     @property
     def meta_title(self):
-        return self.seo_title or f"{self.title} Services | Mimalodi Visual Data Space"
+        return self.seo_title or f"{self.title} | Mimalodi Visual Data Space"
 
     @property
-    def meta_description(self):
-        return self.seo_description or self.short_description
+    def contact_subject(self):
+        return self.inquiry_subject or f"Inquiry about {self.title}"
+
+    def get_absolute_url(self):
+        return reverse("service_detail", kwargs={"slug": self.slug})
 
 
 class ServiceDeliverable(models.Model):
