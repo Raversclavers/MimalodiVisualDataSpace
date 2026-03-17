@@ -1,155 +1,333 @@
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
-from django.core.paginator import Paginator
-from .models import BlogPost
-from .models import BlogPost, Profile, Tutorial  # Add Tutorial to the import statement
-from django.views.generic import ListView, DetailView
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
-from .visualization_utils import generate_static_visualizations
 from django.contrib import messages
-from django.contrib.auth.models import User
-from django import forms
-from .forms import ProfileUpdateForm
-from .models import Profile
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.shortcuts import redirect, render
+from django.conf import settings
+from django.views.generic import DetailView, ListView
+
+from .forms import AccessibleUserCreationForm, ContactForm, ProfileUpdateForm, UserUpdateForm
+from .models import BlogPost, CaseStudy, ContactSubmission, Profile, Service, Tutorial
 
 
+def home(request):
+    context = {
+        "posts": BlogPost.objects.all()[:3],
+        "tutorials": Tutorial.objects.all()[:3],
+        "featured_case_studies": CaseStudy.objects.filter(is_published=True, featured_on_homepage=True)[:3],
+        "featured_services": _published_services().filter(featured_on_homepage=True)[:3],
+    }
+    return render(request, "core/home.html", context)
 
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'email']
 
-class AvatarUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['avatar']
+def about(request):
+    return render(request, "core/about.html", {"featured_services": _published_services().filter(featured_on_homepage=True)[:3]})
+
+
+def services(request):
+    services_catalog = _published_services()
+    context = {
+        "services": services_catalog,
+        "service_metrics": [
+            {"label": "Core service areas", "value": services_catalog.count()},
+            {"label": "Published case studies", "value": CaseStudy.objects.filter(is_published=True).count()},
+            {"label": "Main outcome", "value": "Clearer decisions from better data"},
+        ],
+    }
+    return render(request, "core/services.html", context)
+
+
+class ServiceDetailView(DetailView):
+    model = Service
+    template_name = "core/service_detail.html"
+    context_object_name = "service"
+    slug_field = "slug"
+    slug_url_kwarg = "slug"
+
+    def get_queryset(self):
+        return Service.objects.filter(is_published=True).prefetch_related(
+            "deliverables",
+            "case_studies__metrics",
+            "case_studies__screenshots",
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        linked_case_studies = self.object.case_studies.filter(is_published=True).prefetch_related("metrics", "screenshots")
+        if not linked_case_studies.exists():
+            linked_case_studies = CaseStudy.objects.filter(is_published=True, featured_on_homepage=True)[:2]
+
+        context["service_case_studies"] = linked_case_studies
+        context["related_services"] = Service.objects.filter(is_published=True).exclude(pk=self.object.pk)[:2]
+        context["service_proof_points"] = [
+            {"label": "Deliverables", "value": self.object.deliverables.count()},
+            {"label": "Linked case studies", "value": linked_case_studies.count() if hasattr(linked_case_studies, "count") else len(linked_case_studies)},
+            {"label": "Best fit", "value": "Teams that need clearer reporting"},
+        ]
+        return context
+
+
+def contact(request):
+    selected_service = None
+    initial = {}
+    service_slug = request.GET.get("service", "").strip()
+    requested_subject = request.GET.get("subject", "").strip()
+
+    if service_slug:
+        selected_service = Service.objects.filter(is_published=True, slug=service_slug).first()
+        if selected_service and request.method != "POST":
+            initial["subject"] = selected_service.contact_subject
+
+    if requested_subject and request.method != "POST":
+        initial["subject"] = requested_subject
+
+    form = ContactForm(request.POST or None, initial=initial)
+
+    if request.method == "POST":
+        if form.is_valid():
+            submission = form.save()
+            _send_contact_notification(submission)
+            messages.success(
+                request,
+                "Thanks for reaching out. Your inquiry has been received and I typically respond within 1 to 2 business days.",
+            )
+            return redirect("contact")
+
+        messages.error(request, "Please review the form and correct the highlighted fields.")
+
+    return render(request, "core/contact.html", {"form": form, "selected_service": selected_service})
+
+
+def signup(request):
+    if request.method == "POST":
+        form = AccessibleUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Your account has been created.")
+            return redirect("profile")
+    else:
+        form = AccessibleUserCreationForm()
+    return render(request, "core/signup.html", {"form": form})
+
 
 @login_required
 def profile(request):
-    try:
-        profile = request.user.profile
-    except Profile.DoesNotExist:
-        profile = Profile.objects.create(user=request.user)
-       
-    if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
+    user_profile, _ = Profile.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=user_profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, "Your profile has been updated.")
+            return redirect("profile")
     else:
-        form = ProfileUpdateForm(instance=profile)
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=user_profile)
 
     context = {
-        'form': form
+        "profile_record": user_profile,
+        "profile_completion": _profile_completion_score(request.user, user_profile),
+        "user_form": user_form,
+        "profile_form": profile_form,
     }
-    return render(request, 'core/profile.html', context)
+    return render(request, "core/profile.html", context)
 
-def signup(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')
-    else:
-        form = UserCreationForm()
-    return render(request, 'core/signup.html', {'form': form})
-
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-    return render(request, 'core/login.html')
-
-@login_required
-def logout_view(request):
-    logout(request)  # Corrected this line to call the logout function properly
-    return redirect('home')
-
-def home(request):
-    return render(request, 'core/home.html')
-
-def about(request):
-    return render(request, 'core/about.html')
-
-def contact(request):
-    return render(request, 'core/contact.html')
-
-def blog_list(request):
-    posts = BlogPost.objects.all().order_by('-created_at')
-    return render(request, 'core/blog_list.html', {'posts': posts})
-
-def blog_detail(request, slug):
-    post = BlogPost.objects.get(slug=slug)
-    return render(request, 'core/blog_detail.html', {'post': post})
 
 class BlogListView(ListView):
     model = BlogPost
-    template_name = 'core/blog_list.html'  # Ensure this path is correct
-    context_object_name = 'posts'
+    template_name = "core/blog_list.html"
+    context_object_name = "posts"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["featured_services"] = _published_services()[:2]
+        context["featured_case_studies"] = CaseStudy.objects.filter(is_published=True, featured_on_homepage=True)[:2]
+        return context
+
 
 class BlogDetailView(DetailView):
     model = BlogPost
-    template_name = 'core/blog_detail.html'  # Ensure this path is correct
-    context_object_name = 'post'
+    template_name = "core/blog_detail.html"
+    context_object_name = "post"
+    slug_field = "slug"
+    slug_url_kwarg = "slug"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["related_posts"] = BlogPost.objects.exclude(pk=self.object.pk)[:2]
+        context["featured_services"] = _published_services()[:2]
+        return context
+
+
+def analytics(request):
+    context = {
+        "metrics": [
+            {"label": "Published articles", "value": BlogPost.objects.count()},
+            {"label": "Tutorials available", "value": Tutorial.objects.count()},
+            {"label": "Service landing pages", "value": Service.objects.filter(is_published=True).count()},
+            {"label": "Case studies", "value": CaseStudy.objects.filter(is_published=True).count()},
+        ],
+        "analytics_highlights": [
+            {
+                "title": "Reporting systems over vanity dashboards",
+                "description": "The site now frames analytics as a repeatable business workflow: cleaner data, clearer reporting, and stronger stakeholder communication.",
+            },
+            {
+                "title": "Portfolio-backed services",
+                "description": "Service pages can now point to linked case studies, which creates a more convincing path from offer to proof.",
+            },
+            {
+                "title": "Simple, production-minded delivery",
+                "description": "The stack remains plain Django so the experience stays reliable on inexpensive hosting without relying on fragile prototype infrastructure.",
+            },
+        ],
+        "featured_services": _published_services()[:3],
+        "featured_case_studies": CaseStudy.objects.filter(is_published=True, featured_on_homepage=True)[:2],
+    }
+    return render(request, "core/analytics.html", context)
+
+
+def portfolio(request):
+    case_studies = CaseStudy.objects.filter(is_published=True).prefetch_related("metrics", "screenshots")
+    context = {
+        "case_studies": case_studies,
+        "portfolio_metrics": [
+            {"label": "Case studies", "value": len(case_studies)},
+            {"label": "Core offer", "value": "Dashboards and reporting"},
+            {"label": "Audience", "value": "Clients and employers"},
+        ],
+    }
+    return render(request, "core/portfolio.html", context)
+
+
+class CaseStudyDetailView(DetailView):
+    model = CaseStudy
+    template_name = "core/portfolio_detail.html"
+    context_object_name = "case_study"
+    slug_field = "slug"
+    slug_url_kwarg = "slug"
+
+    def get_queryset(self):
+        return CaseStudy.objects.filter(is_published=True).prefetch_related("metrics", "screenshots")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["related_case_studies"] = (
+            CaseStudy.objects.filter(is_published=True)
+            .exclude(pk=self.object.pk)
+            .order_by("featured_order", "title")[:2]
+        )
+        return context
+
 
 def visualizations(request):
-    # Context for dashboard (modify with actual dataset details)
+    visualization_case_studies = CaseStudy.objects.filter(is_published=True).prefetch_related("metrics")[:3]
     context = {
-        'dataset_title': 'World Happiness Report',
-        'dataset_overview': 'This dataset explores the happiness scores of countries from 2015 to 2019.',
-        'filters': ['Year', 'Region'],
-        'graphs': {
-            'interactive_chart': 'example_interactive_dashboard',
-            'static_visual': 'example_static_chart',
-        },
-        'insights': 'Key insights from the dataset include trends in happiness scores over years and regional comparisons.',
+        "dataset_title": "World Happiness Report",
+        "dataset_overview": "A sample portfolio dataset showing how business questions can be turned into clear visual narratives.",
+        "static_visual": "core/images/example_static_chart.png",
+        "insights": "Reusable visuals, concise annotations, and a clear narrative are more production-friendly than a prototype dashboard stack.",
+        "visualization_case_studies": visualization_case_studies,
     }
-    return render(request, 'core/visualizations.html', context)
+    return render(request, "core/visualizations.html", context)
 
-def home(request):
-       posts = BlogPost.objects.all().order_by('-created_at')[:5]  # Get the latest 5 posts
-       return render(request, 'core/home.html', {'posts': posts})
-
-@login_required
-def analytics(request):
-    return render(request, 'core/analytics.html')
-
-def blog_tutorials(request):
-    blog_posts = BlogPost.objects.all()  # Fetch all blog posts
-    return render(request, 'core/blog_tutorials.html', {'blog_posts': blog_posts})
-
-def blog_and_tutorials(request):
-    blog_posts = BlogPost.objects.all()  # Fetch all blog posts
-    return render(request, 'core/blog_and_tutorials.html', {'blog_posts': blog_posts})
 
 def tutorials(request):
-    tutorials = Tutorial.objects.all()  # Fetch all tutorials
-    return render(request, 'core/tutorials.html', {'tutorials': tutorials})
+    return render(
+        request,
+        "core/tutorials.html",
+        {
+            "tutorials": Tutorial.objects.all(),
+            "tutorial_tracks": _tutorial_tracks(),
+            "featured_services": _published_services()[:2],
+        },
+    )
+
 
 def tutorial_beginners_bar(request):
-    # Render a template with the line graph tutorial content
-    return render(request, 'core/tutorials/beginners_bar.html')
+    return render(request, "core/tutorials/beginners_bar.html")
+
 
 def tutorial_beginners_line(request):
-    return render(request, 'core/tutorials/beginners_line.html')  # Create this template
+    return render(request, "core/tutorials/beginners_line.html")
+
 
 def tutorial_intermediate_histogram(request):
-    return render(request, 'core/tutorials/intermediate_histogram.html')  # Create this template
+    return render(request, "core/tutorials/intermediate_histogram.html")
+
 
 def tutorial_intermediate_scatter(request):
-    return render(request, 'core/tutorials/intermediate_scatter.html')  # Create this template
+    return render(request, "core/tutorials/intermediate_scatter.html")
+
 
 def tutorial_advanced_network(request):
-    return render(request, 'core/tutorials/advanced_network.html')  # Create this template
+    return render(request, "core/tutorials/advanced_network.html")
+
 
 def tutorial_advanced_3d(request):
-    return render(request, 'core/tutorials/advanced_3d.html')
+    return render(request, "core/tutorials/advanced_3d.html")
 
-def tutorials_home(request):
-    return render(request, 'core/tutorials_home.html')
+
+def _published_services():
+    return Service.objects.filter(is_published=True).prefetch_related("deliverables", "case_studies__metrics")
+
+
+def _tutorial_tracks():
+    return [
+        {
+            "level": "Beginner",
+            "title": "Foundations for chart literacy and analysis basics",
+            "description": "Start with approachable chart-building lessons that make it easier to move from raw rows to a visual explanation.",
+            "url_name": "tutorial_beginners_bar",
+            "topics": ["Bar charts", "Line charts", "Basic chart structure"],
+        },
+        {
+            "level": "Intermediate",
+            "title": "Interactive and distribution-focused analysis",
+            "description": "Build confidence with more analytical chart forms and the logic behind exploratory data storytelling.",
+            "url_name": "tutorial_intermediate_histogram",
+            "topics": ["Histograms", "Scatter plots", "Interactive analysis"],
+        },
+        {
+            "level": "Advanced",
+            "title": "Complex visual systems and network thinking",
+            "description": "Explore advanced chart structures and visual systems that support strategic reporting or technical presentations.",
+            "url_name": "tutorial_advanced_network",
+            "topics": ["Network graphs", "3D views", "Presentation-ready visuals"],
+        },
+    ]
+
+
+def _profile_completion_score(user, profile):
+    fields = [
+        user.first_name,
+        user.last_name,
+        user.email,
+        profile.bio,
+        profile.location,
+    ]
+    completed_fields = sum(bool(field) for field in fields)
+    return int((completed_fields / len(fields)) * 100)
+
+
+def _send_contact_notification(submission: ContactSubmission) -> None:
+    recipient = getattr(settings, "CONTACT_NOTIFICATION_EMAIL", "") or getattr(settings, "DEFAULT_FROM_EMAIL", "")
+    default_from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "")
+
+    if not recipient or not default_from_email:
+        return
+
+    send_mail(
+        subject=f"New contact inquiry: {submission.subject}",
+        message=(
+            f"Name: {submission.name}\n"
+            f"Email: {submission.email}\n\n"
+            f"Message:\n{submission.message}"
+        ),
+        from_email=default_from_email,
+        recipient_list=[recipient],
+        fail_silently=True,
+    )

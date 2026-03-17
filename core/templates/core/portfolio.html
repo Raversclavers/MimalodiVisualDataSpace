@@ -1,0 +1,72 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Portfolio - Mimalodi Visual Data Space{% endblock %}
+
+{% block content %}
+<section class="hero-panel">
+    <div class="row align-items-center g-4 g-lg-5">
+        <div class="col-lg-7">
+            <span class="eyebrow">Portfolio and case studies</span>
+            <h1 class="mb-3">Selected work that shows how analysis becomes reporting, dashboards, and visual clarity.</h1>
+            <p class="lead">This portfolio is designed to help both clients and employers evaluate how I approach business problems, structure data work, and communicate outcomes in a polished, decision-ready way.</p>
+            <div class="hero-actions">
+                <a href="{% url 'contact' %}" class="btn btn-primary">Discuss your project</a>
+                <a href="{% url 'blog_list' %}" class="btn btn-outline-primary">Read insight articles</a>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="surface-panel portfolio-summary-panel">
+                <div class="section-heading mb-3">
+                    <h2>What this portfolio demonstrates</h2>
+                    <p>Strategic thinking, business framing, technical fluency, and presentation quality.</p>
+                </div>
+                <div class="proof-strip portfolio-proof-strip">
+                    {% for metric in portfolio_metrics %}
+                    <div class="proof-pill">
+                        <strong>{{ metric.label }}</strong>
+                        <p>{{ metric.value }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="section-heading">
+        <span class="eyebrow">Case studies</span>
+        <h2>Reusable project stories with clear problem framing and outcomes.</h2>
+        <p>If you are reviewing this site before a conversation, these examples show how I think about client context, analytical approach, tooling choices, and business-facing results.</p>
+    </div>
+    <div class="case-study-grid case-study-grid-full">
+        {% for case_study in case_studies %}
+            {% include 'core/partials/case_study_card.html' with case_study=case_study compact=False %}
+        {% empty %}
+            <div class="empty-state">
+                <strong>No published case studies yet</strong>
+                <p class="mt-2">Use the Django admin to add your first project entry, then it will appear here automatically.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="cta-panel text-center text-lg-start">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="eyebrow">Next step</span>
+                <h2>Want work like this tailored to your team, business, or portfolio goals?</h2>
+                <p>I can help shape dashboard concepts, reporting systems, and visual insight work that is clear enough for decision-makers and polished enough for high-stakes review.</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="cta-actions justify-content-lg-end">
+                    <a href="{% url 'contact' %}" class="btn btn-primary">Start a conversation</a>
+                    <a href="{% url 'about' %}" class="btn btn-outline-light">Learn how I work</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

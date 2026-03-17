@@ -3,125 +3,196 @@
 {% load static %}
 
 {% block title %}Home - Mimalodi Visual Data Space{% endblock %}
+{% block meta_description %}Mimalodi Visual Data Space helps teams turn scattered numbers into decision-grade dashboards, executive reporting, and clear visual insight that supports action.{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <header class="text-center mb-4">
-        <h1 class="display-4">Mimalodi Visual Data Space</h1>
-        <p class="lead">Your gateway to insightful data visualization and analysis.</p>
-    </header>
-
-    <section class="mb-5">
-        <h2 class="text-primary">Explore the Universe of Data</h2>
-        <img src="{% static 'images/galaxy.jpg' %}" alt="Galaxy" class="img-fluid rounded" style="max-height: 800px; object-fit: cover;" />
-        <p>This stunning image of a galaxy represents the vastness of data we aim to explore and visualize.</p>
-    </section>
-
-    <!-- Hero Section -->
-    <div class="hero bg-light text-dark py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 mx-auto text-center">
-                    <h2 class="display-4">Discover Insights</h2>
-                    <p class="lead">Explore insightful data visualizations and interactive dashboards.</p>
-                    <a href="{% url 'blog_list' %}" class="btn btn-primary btn-lg mt-3">Explore Our Blog</a>
+<section class="hero-panel">
+    <div class="row align-items-center g-4 g-lg-5">
+        <div class="col-lg-7">
+            <div class="hero-copy">
+                <span class="eyebrow">Independent analytics studio</span>
+                <p class="hero-intro">Mimalodi Visual Data Space brings together analysis, structure, and presentation so your reporting feels easier to trust and easier to act on.</p>
+                <h1>Make your data look sharper, read faster, and guide better decisions.</h1>
+                <p class="lead">I help founder-led teams, consultants, and organizations turn scattered numbers into executive-ready dashboards, clearer reporting systems, and visual narratives that hold up in real business conversations.</p>
+                <div class="hero-badges" aria-label="Core brand strengths">
+                    <span class="hero-badge">Decision-focused reporting</span>
+                    <span class="hero-badge">Executive-ready dashboards</span>
+                    <span class="hero-badge">Clear visual storytelling</span>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- About Us Section -->
-    <div class="container mt-5">
-        <h2>About Us</h2>
-        <p>Learn more about our mission to simplify data through engaging tutorials, interactive dashboards, and practical insights.</p>
-        <a href="{% url 'about' %}" class="btn btn-secondary">Learn More</a>
-    </div>
-
-    <!-- Featured Tutorials Section -->
-<div class="container mt-5">
-    <h2>Featured Tutorials</h2>
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <img src="{% static 'images/data.jpg' %}" class="card-img-top" alt="Getting Started with Data Analysis" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">Getting Started with Data Analysis</h5>
-                    <p class="card-text">Learn the foundations of data analysis with Python libraries like Pandas and NumPy.</p>
-                    <a href="/tutorials/getting-started-data-analysis" class="btn btn-primary">View Tutorial</a>
+                <div class="hero-actions">
+                    <a href="{% url 'contact' %}" class="btn btn-primary">Start a project conversation</a>
+                    <a href="{% url 'portfolio' %}" class="btn btn-outline-primary">Review selected work</a>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <img src="{% static 'images/multiplot.jpg' %}" class="card-img-top" alt="Interactive Visualizations with Plotly/Dash" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">Interactive Visualizations with Plotly/Dash</h5>
-                    <p class="card-text">Learn how to create interactive dashboards and visualizations.</p>
-                    <a href="/tutorials/interactive-dashboards" class="btn btn-primary">View Tutorial</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <img src="{% static 'images/line graph.jpg' %}" class="card-img-top" alt="Deploying Data Dashboards" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">Deploying Data Dashboards</h5>
-                    <p class="card-text">Learn how to deploy your dashboards online using modern tools.</p>
-                    <a href="/tutorials/deploying-dashboards" class="btn btn-primary">View Tutorial</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-    <!-- Latest Blog Posts Section as Cards -->
-    <div class="container mt-5">
-        <h2>Latest Blog Posts</h2>
-        <div class="row">
-            {% for post in blog_posts %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ post.thumbnail.url }}" class="card-img-top" alt="{{ post.title }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <p class="card-text">{{ post.excerpt }}</p>
-                        <a href="{% url 'blog_detail' post.id %}" class="btn btn-primary">Read More</a>
+                <div class="hero-meta">
+                    <div class="metric-card">
+                        <span class="metric-label">Best fit</span>
+                        <span class="metric-value">Founder-led teams, consultants, and mission-driven organizations</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Signature work</span>
+                        <span class="metric-value">Dashboards, reporting systems, and polished visual insight</span>
                     </div>
                 </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-
-
-    <!-- User Testimonials Section -->
-    <div class="container mt-5">
-        <h2>User Testimonials</h2>
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <p class="card-text">"Mimalodi Visual Data Space has transformed the way I analyze data. The tutorials are easy to follow and very informative!"</p>
-                        <footer class="blockquote-footer">Elise Malon</footer>
+                <div class="hero-signature-grid">
+                    <div class="signature-card">
+                        <strong>Structure first</strong>
+                        <p>Clarify the metrics, audience, and reporting flow before styling the presentation.</p>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6 mb-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <p class="card-text">"The interactive dashboards are a game-changer! I can visualize my data like never before."</p>
-                        <footer class="blockquote-footer">Risper Wambui</footer>
+                    <div class="signature-card">
+                        <strong>Business-facing language</strong>
+                        <p>Translate analysis into something leadership teams and clients can actually use.</p>
+                    </div>
+                    <div class="signature-card">
+                        <strong>Presentation quality</strong>
+                        <p>Outputs are designed to feel credible in reviews, decks, dashboards, and handoffs.</p>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-lg-5">
+            <div class="hero-visual">
+                <div class="hero-image-frame">
+                    <img src="{% static 'images/galaxy.jpg' %}" alt="Abstract data-inspired visual environment for Mimalodi Visual Data Space">
+                </div>
+                <div class="data-float-card">
+                    <strong>From raw reporting to executive clarity</strong>
+                    <p>Build a reporting layer that reduces noise, sharpens interpretation, and makes your next decision easier to defend.</p>
+                </div>
+            </div>
+        </div>
     </div>
+</section>
 
-    <!-- Call to Action Section -->
-    <div class="container mt-5 text-center">
-        <h2>Join Us Today!</h2>
-        <p>Sign up now to access exclusive tutorials and resources.</p>
-        <a href="{% url 'signup' %}" class="btn btn-success btn-lg">Sign Up</a>
+<section class="section-shell">
+    <div class="surface-panel">
+        <div class="proof-strip">
+            <div class="proof-pill">
+                <strong>Analysis that lands</strong>
+                <p>Turn scattered inputs into a cleaner story with a stronger decision path.</p>
+            </div>
+            <div class="proof-pill">
+                <strong>Dashboards that hold up</strong>
+                <p>Create review-ready reporting spaces built for real stakeholders, not just screenshots.</p>
+            </div>
+            <div class="proof-pill">
+                <strong>Reporting that reads fast</strong>
+                <p>Shape updates and KPI views so leadership teams can understand them at a glance.</p>
+            </div>
+            <div class="proof-pill">
+                <strong>Storytelling with authority</strong>
+                <p>Present performance, risk, and opportunity with visual confidence and sharper framing.</p>
+            </div>
+        </div>
     </div>
-</div>
+</section>
+
+<section class="section-shell">
+    <div class="brand-narrative">
+        <div class="surface-panel">
+            <span class="section-kicker">Brand perspective</span>
+            <h2>Designed for serious work, not generic dashboard decoration.</h2>
+            <p>Mimalodi Visual Data Space is positioned as a focused analytics partner for teams that need their reporting to feel more useful, more credible, and more presentation-ready. The work is less about visual novelty and more about clarity under pressure.</p>
+            <div class="brand-points">
+                <span class="brand-point">Sharper stakeholder updates</span>
+                <span class="brand-point">Clearer KPI narratives</span>
+                <span class="brand-point">More credible client-facing delivery</span>
+            </div>
+        </div>
+        <div class="brand-proof-card">
+            <span class="section-kicker">What the brand signals</span>
+            <h3>Precision, calm, and decision-ready thinking.</h3>
+            <p>The site should communicate the same thing the work does: structure, confidence, and a high standard for how insights are presented.</p>
+            <ul>
+                <li>Clear executive-facing communication</li>
+                <li>Professional service framing and microcopy</li>
+                <li>Visual restraint with stronger hierarchy</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="section-heading">
+        <span class="eyebrow">Services preview</span>
+        <h2>Services shaped around the moments where reporting quality matters most.</h2>
+        <p>Whether the problem is a messy dashboard, an unclear KPI story, or a reporting workflow that feels too fragile, the service offers are designed to move from confusion to clarity quickly.</p>
+    </div>
+    <div class="service-grid">
+        {% for service in featured_services %}
+            {% include 'core/partials/service_card.html' with service=service compact=True %}
+        {% endfor %}
+    </div>
+    <div class="section-actions">
+        <a href="{% url 'services' %}" class="btn btn-primary">Explore service offers</a>
+        <a href="{% url 'contact' %}" class="btn btn-outline-primary">Ask about your reporting challenge</a>
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="section-heading">
+        <span class="eyebrow">Featured portfolio</span>
+        <h2>Selected work that shows the thinking behind the presentation.</h2>
+        <p>These case studies are there to show more than outcomes. They reveal how reporting problems are framed, structured, and turned into deliverables that feel ready for real stakeholders.</p>
+    </div>
+    <div class="case-study-grid">
+        {% for case_study in featured_case_studies %}
+            {% include 'core/partials/case_study_card.html' with case_study=case_study compact=True %}
+        {% empty %}
+        <div class="empty-state">
+            <strong>Portfolio coming into focus</strong>
+            <p class="mt-2">Case studies will appear here as soon as projects are published in the portfolio system.</p>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="section-actions">
+        <a href="{% url 'portfolio' %}" class="btn btn-primary">View the full portfolio</a>
+        <a href="{% url 'contact' %}" class="btn btn-outline-primary">Discuss similar work</a>
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="section-heading">
+        <span class="eyebrow">Why clients trust the work</span>
+        <h2>Built to feel composed, credible, and useful in high-visibility moments.</h2>
+        <p>The goal is not simply to make data look cleaner. It is to make the analysis easier to defend, easier to communicate, and easier to act on when the stakes are real.</p>
+    </div>
+    <div class="trust-grid">
+        <article class="quote-card">
+            <div class="quote-mark">“</div>
+            <h3>Business-first framing</h3>
+            <p>Every chart, dashboard, and report is shaped around decisions, priorities, and outcomes rather than decoration or unnecessary complexity.</p>
+            <div class="quote-source">Designed for leaders, teams, and clients</div>
+        </article>
+        <article class="quote-card">
+            <div class="quote-mark">“</div>
+            <h3>Clear communication</h3>
+            <p>Complex information is translated into concise visual language that works for technical and non-technical audiences without losing credibility.</p>
+            <div class="quote-source">Made to be understood quickly</div>
+        </article>
+        <article class="quote-card">
+            <div class="quote-mark">“</div>
+            <h3>Professional delivery</h3>
+            <p>From exploratory analysis to polished reporting, the work is built to feel composed, modern, and ready for review, handoff, or presentation.</p>
+            <div class="quote-source">Premium presentation standard</div>
+        </article>
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="cta-panel text-center text-lg-start">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="eyebrow">Next step</span>
+                <h2>If your reporting needs to look sharper and guide better decisions, start here.</h2>
+                <p>Share the reporting bottleneck, the dashboard challenge, or the decision-making gap you want to solve. From there, I can help shape the clearest next move.</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="cta-actions justify-content-lg-end">
+                    <a href="{% url 'contact' %}" class="btn btn-primary">Start the conversation</a>
+                    <a href="{% url 'blog_list' %}" class="btn btn-outline-light">Read strategic insights</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

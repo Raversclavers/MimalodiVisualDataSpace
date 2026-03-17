@@ -40,7 +40,7 @@
                     <li>Importing and exploring datasets.</li>
                     <li>Data filtering, grouping, and aggregation.</li>
                 </ul>
-                <a href="/tutorials/getting-started-data-analysis" class="btn btn-primary">View Tutorial</a>
+                <a href="{% url 'tutorial_beginners_bar' %}" class="btn btn-primary">View Tutorial</a>
             </div>
         </div>
         <div class="card">
@@ -51,7 +51,7 @@
                     <li>Create bar plots, line graphs, and scatter plots.</li>
                     <li>Learn styling and customization techniques.</li>
                 </ul>
-                <a href="/tutorials/introduction-data-visualization" class="btn btn-primary">View Tutorial</a>
+                <a href="{% url 'tutorial_beginners_line' %}" class="btn btn-primary">View Tutorial</a>
             </div>
         </div>
     </section>
@@ -68,7 +68,7 @@
                     <li>Build interactive charts like histograms and pie charts.</li>
                     <li>Add dropdowns, sliders, and filters to your dashboards.</li>
                 </ul>
-                <a href="/tutorials/interactive-dashboards" class="btn btn-primary">View Tutorial</a>
+                <a href="{% url 'tutorial_intermediate_histogram' %}" class="btn btn-primary">View Tutorial</a>
             </div>
         </div>
         <div class="card">
@@ -79,7 +79,7 @@
                     <li>Build linear regression and classification models.</li>
                     <li>Understand Random Forest and feature importance.</li>
                 </ul>
-                <a href="/tutorials/machine-learning-basics" class="btn btn-primary">View Tutorial</a>
+                <a href="{% url 'tutorial_intermediate_scatter' %}" class="btn btn-primary">View Tutorial</a>
             </div>
         </div>
     </section>
@@ -96,7 +96,7 @@
                     <li>Deploy with Django and Plotly Dash.</li>
                     <li>Host on platforms like Heroku or AWS.</li>
                 </ul>
-                <a href="/tutorials/deploying-dashboards" class="btn btn-primary">View Tutorial</a>
+                <a href="{% url 'tutorial_advanced_network' %}" class="btn btn-primary">View Tutorial</a>
             </div>
         </div>
         <div class="card">
@@ -107,7 +107,7 @@
                     <li>Use Dask or PySpark for scalable data processing.</li>
                     <li>Optimize performance with real-world examples.</li>
                 </ul>
-                <a href="/tutorials/big-data-handling" class="btn btn-primary">View Tutorial</a>
+                <a href="{% url 'tutorial_advanced_3d' %}" class="btn btn-primary">View Tutorial</a>
             </div>
         </div>
     </section>
@@ -117,8 +117,8 @@
         <h2 class="mb-4 text-primary">Use Case Examples</h2>
         <p>Explore real-world examples and case studies to understand practical applications.</p>
         <ul>
-            <li><a href="/tutorials/car-price-prediction">Car Price Prediction</a></li>
-            <li><a href="/tutorials/netflix-data-analysis">Netflix Data Analysis</a></li>
+            <li><a href="{% url 'blog_list' %}">Data storytelling articles</a></li>
+            <li><a href="{% url 'visualizations' %}">Visualization portfolio examples</a></li>
         </ul>
     </section>
 
@@ -127,15 +127,33 @@
         <h2 class="mb-4 text-primary">Tools and Resources</h2>
         <p>Find the best tools and resources to help you with your data projects.</p>
         <ul>
-            <li><a href="/resources/tools">Recommended Tools</a></li>
-            <li><a href="/resources/cheatsheets">Cheat Sheets</a></li>
+            <li><a href="{% url 'about' %}">Recommended service approach</a></li>
+            <li><a href="{% url 'contact' %}">Request tailored guidance</a></li>
         </ul>
     </section>
 
     <!-- Community Contributions -->
     <section id="community" class="mt-5">
         <h2 class="mb-4 text-primary">Community Contributions</h2>
-        <p>Contribute to our tutorials or share your own insights. Use our <a href="/contribute">submission form</a> to get started.</p>
+        <p>Share your brief or request a collaboration through our <a href="{% url 'contact' %}">contact form</a>.</p>
     </section>
+
+    {% if tutorials %}
+    <section id="library" class="mt-5">
+        <h2 class="mb-4 text-primary">Published Tutorial Library</h2>
+        <div class="row">
+            {% for tutorial in tutorials %}
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h5">{{ tutorial.title }}</h3>
+                        <p class="text-muted mb-0">{{ tutorial.content|truncatewords:24 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
 </main>
 {% endblock %}

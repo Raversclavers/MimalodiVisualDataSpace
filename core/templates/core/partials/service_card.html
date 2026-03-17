@@ -1,0 +1,28 @@
+<article class="service-card {% if compact %}service-card-compact{% endif %}">
+    <div class="feature-icon"><i class="{{ service.icon }}" aria-hidden="true"></i></div>
+    <h3>{{ service.title }}</h3>
+    <p>{{ service.short_description }}</p>
+    <div class="service-section">
+        <span class="case-study-label">Best fit</span>
+        <p>{{ service.ideal_client }}</p>
+    </div>
+    <div class="service-section">
+        <span class="case-study-label">Typical deliverables</span>
+        <div class="tag-list">
+            {% for item in service.deliverables.all %}
+            <span class="tag-pill">{{ item.title }}</span>
+            {% empty %}
+            <span class="tag-pill">Tailored scope</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="service-section service-value">
+        <span class="case-study-label">Business outcome</span>
+        <p>{{ service.business_value }}</p>
+    </div>
+    {% if not compact %}
+    <div>
+        <a href="{{ service.get_absolute_url }}" class="btn btn-outline-primary">View service details<span class="visually-hidden"> for {{ service.title }}</span></a>
+    </div>
+    {% endif %}
+</article>

@@ -1,9 +1,24 @@
 {% extends 'core/base.html' %}
-{% load plotly_dash %}
 
-{% block title %}Analytics Dashboard - Mimalodi Visual Data Space{% endblock %}
+{% block title %}Analytics - Mimalodi Visual Data Space{% endblock %}
 
 {% block content %}
-<h1>Analytics Dashboard</h1>
-{% plotly_app name="AnalyticsDashboard" %}
+<div class="container mt-5">
+	<header class="text-center mb-4">
+		<h1 class="display-5">Analytics Snapshot</h1>
+		<p class="lead">A lightweight summary page that keeps deployment simple while still showing business value.</p>
+	</header>
+	<div class="row">
+		{% for metric in metrics %}
+		<div class="col-md-4 mb-4">
+			<div class="card shadow-sm h-100 text-center">
+				<div class="card-body">
+					<p class="text-uppercase text-muted small mb-2">{{ metric.label }}</p>
+					<h2 class="display-6">{{ metric.value }}</h2>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
 {% endblock %}

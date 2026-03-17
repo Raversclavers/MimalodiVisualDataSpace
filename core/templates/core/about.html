@@ -4,80 +4,83 @@
 {% block title %}About Us - Mimalodi Visual Data Space{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <header class="text-center mb-4">
-        <h1 class="display-4">Empowering Data Exploration</h1>
-        <p class="lead">At Mimalodi Visual Data Space, we believe in the transformative power of data. Our platform is designed to help you unlock insights and make informed decisions.</p>
-    </header>
-
-    <!-- Mission Statement Section -->
-    <section class="mb-5">
-        <div class="text-center">
-            <h2 class="text-primary">Our Mission</h2>
-            <p class="mt-3">
-                To democratize data by providing accessible, engaging, and powerful visualization tools. 
-                Our goal is to simplify complex data, making it actionable and insightful for individuals and organizations alike.
-            </p>
-        </div>
-    </section>
-
-    <!-- Features and Services Section -->
-    <section class="mb-5">
-        <h2 class="text-primary text-center">What We Offer</h2>
-        <div class="row mt-4">
-            <div class="col-md-4 text-center">
-                <div class="card shadow-sm border-primary">
-                    <img src="{% static 'images/data.jpg' %}" alt="Tutorials" class="card-img-top rounded-top">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">Step-by-Step Tutorials</h5>
-                        <p class="card-text">
-                            Master data visualization techniques with our structured and beginner-friendly tutorials.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 text-center">
-                <div class="card shadow-sm border-primary">
-                    <img src="{% static 'images/multiplot.jpg' %}" alt="Dashboards" class="card-img-top rounded-top">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">Interactive Dashboards</h5>
-                        <p class="card-text">
-                            Explore dynamic dashboards designed to provide real-time insights and analytics.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 text-center">
-                <div class="card shadow-sm border-primary">
-                    <img src="{% static 'images/line graph.jpg' %}" alt="Reports" class="card-img-top rounded-top">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">In-Depth Reports</h5>
-                        <p class="card-text">
-                            Leverage our comprehensive data analyses and reports to guide your strategies effectively.
-                        </p>
-                    </div>
-                </div>
+<section class="hero-panel">
+    <div class="row align-items-center g-4 g-lg-5">
+        <div class="col-lg-7">
+            <span class="eyebrow">About the studio</span>
+            <h1 class="mb-3">Mimalodi Visual Data Space helps turn complicated data into clear business direction.</h1>
+            <p class="lead">The focus is practical analytics work that helps teams understand performance, report with confidence, and communicate insights more clearly to the people who need them.</p>
+            <div class="hero-actions">
+                <a href="{% url 'services' %}" class="btn btn-primary">View services</a>
+                <a href="{% url 'portfolio' %}" class="btn btn-outline-primary">See portfolio work</a>
             </div>
         </div>
-    </section>
+        <div class="col-lg-5">
+            <div class="surface-panel">
+                <span class="case-study-label">What clients get</span>
+                <h2 class="mt-3">A clearer path from raw data to decisions.</h2>
+                <p>That can mean cleaner source data, sharper spreadsheet analysis, better KPI reporting, more useful dashboards, or stronger visual storytelling for high-visibility communication.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <!-- Community and Vision Section -->
-    <section class="mb-5 text-center">
-        <h2 class="text-primary">Our Vision</h2>
-        <p class="mt-3">
-            We aspire to create a global community of data enthusiasts who leverage the power of data to drive 
-            meaningful change. By sharing knowledge and tools, we aim to foster innovation and informed decision-making.
-        </p>
-    </section>
+<section class="section-shell">
+    <div class="section-heading">
+        <span class="eyebrow">Approach</span>
+        <h2>Professional, practical, and built around outcomes.</h2>
+        <p>The work is designed for organizations that need clarity, not complexity. That means focusing on useful analysis, cleaner reporting structure, and visuals that support real business conversations.</p>
+    </div>
+    <div class="feature-grid">
+        <article class="feature-card">
+            <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
+            <h3>Outcome-driven thinking</h3>
+            <p>Services are shaped around better decisions, cleaner reporting, and stronger communication rather than disconnected technical tasks.</p>
+        </article>
+        <article class="feature-card">
+            <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+            <h3>Structured delivery</h3>
+            <p>Each engagement is designed to move from messy inputs to polished outputs with clear deliverables and a stronger analytical foundation.</p>
+        </article>
+        <article class="feature-card">
+            <div class="feature-icon"><i class="fas fa-users"></i></div>
+            <h3>Client-friendly communication</h3>
+            <p>The work is built for audiences beyond technical teams, so reporting, dashboards, and insights are easier to share and trust.</p>
+        </article>
+    </div>
+</section>
 
-    <!-- Call to Action Section -->
-    <section class="text-center bg-light py-5">
-        <h2 class="text-primary">Get Involved Today</h2>
-        <p class="mt-3">
-            Explore our tutorials, engage with our interactive dashboards, and join a vibrant community of data enthusiasts.
-            Let’s transform the way we understand and use data together!
-        </p>
-        <a href="{% url 'contact' %}" class="btn btn-primary btn-lg mt-3">Contact Us</a>
-    </section>
-</div>
+<section class="section-shell">
+    <div class="section-heading">
+        <span class="eyebrow">Services snapshot</span>
+        <h2>Core ways I support clients and teams.</h2>
+    </div>
+    <div class="service-grid">
+        {% for service in featured_services %}
+            {% include 'core/partials/service_card.html' with service=service compact=True %}
+        {% endfor %}
+    </div>
+    <div class="section-actions">
+        <a href="{% url 'services' %}" class="btn btn-primary">Explore all services</a>
+        <a href="{% url 'contact' %}" class="btn btn-outline-primary">Discuss your needs</a>
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="cta-panel text-center text-lg-start">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="eyebrow">Next step</span>
+                <h2>If you need sharper reporting, cleaner analysis, or clearer dashboard thinking, start with a conversation.</h2>
+                <p>Share what you are working on, where the reporting friction is, or what you want to understand better. From there, I can recommend the right service fit.</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="cta-actions justify-content-lg-end">
+                    <a href="{% url 'contact' %}" class="btn btn-primary">Contact Mimalodi Visual Data Space</a>
+                    <a href="{% url 'services' %}" class="btn btn-outline-light">Review service options</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

@@ -1,0 +1,140 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ case_study.title }} - Mimalodi Visual Data Space{% endblock %}
+
+{% block content %}
+<section class="hero-panel">
+    <div class="row align-items-center g-4 g-lg-5">
+        <div class="col-lg-7">
+            <span class="eyebrow">Case study</span>
+            <h1 class="mb-3">{{ case_study.title }}</h1>
+            <p class="lead">{{ case_study.summary }}</p>
+            <div class="content-card-meta mt-3">
+                <span>{{ case_study.category }}</span>
+                {% if case_study.client_name %}<span>{{ case_study.client_name }}</span>{% endif %}
+                {% if case_study.industry %}<span>{{ case_study.industry }}</span>{% endif %}
+            </div>
+            <div class="hero-actions">
+                <a href="{% url 'contact' %}" class="btn btn-primary">Discuss similar work</a>
+                <a href="{% url 'portfolio' %}" class="btn btn-outline-primary">Back to portfolio</a>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="case-study-detail-media">
+                {% if case_study.hero_image %}
+                <img src="{{ case_study.hero_image.url }}" alt="{{ case_study.title }} hero visual">
+                {% else %}
+                <img src="{% static case_study.hero_image_path %}" alt="{{ case_study.title }} hero visual">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="case-study-metric-grid">
+        {% for metric in case_study.metrics.all %}
+        <div class="metric-card">
+            <span class="metric-label">{{ metric.label }}</span>
+            <span class="metric-value">{{ metric.value }}</span>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <strong>No project metrics added yet</strong>
+            <p class="mt-2">Add case study metrics in the Django admin to strengthen the quantitative story.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="detail-story-grid">
+        <article class="surface-panel detail-story-card">
+            <span class="case-study-label">Client / problem context</span>
+            <h2>Context</h2>
+            <p>{{ case_study.client_context }}</p>
+        </article>
+        <article class="surface-panel detail-story-card">
+            <span class="case-study-label">Challenge</span>
+            <h2>What needed to change</h2>
+            <p>{{ case_study.challenge }}</p>
+        </article>
+        <article class="surface-panel detail-story-card">
+            <span class="case-study-label">Approach</span>
+            <h2>How the work was structured</h2>
+            <p>{{ case_study.approach }}</p>
+        </article>
+        <article class="surface-panel detail-story-card">
+            <span class="case-study-label">Solution</span>
+            <h2>What was delivered</h2>
+            <p>{{ case_study.solution }}</p>
+        </article>
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="section-heading">
+        <span class="eyebrow">Tools and outcome</span>
+        <h2>Execution details and business-facing result.</h2>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="surface-panel detail-tools-panel">
+                <span class="case-study-label">Tools used</span>
+                <div class="tag-list mt-3">
+                    {% for tool in case_study.tools_list %}
+                    <span class="tag-pill">{{ tool }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="surface-panel detail-result-panel">
+                <span class="case-study-label">Result / outcome</span>
+                <h2 class="mt-3">Outcome</h2>
+                <p>{{ case_study.result }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="section-heading">
+        <span class="eyebrow">Screenshots and visuals</span>
+        <h2>Deeper visual storytelling for the project.</h2>
+    </div>
+    <div class="screenshot-grid">
+        {% for screenshot in case_study.screenshots.all %}
+        <article class="content-card screenshot-card">
+            <div class="content-card-media">
+                {% if screenshot.image %}
+                <img src="{{ screenshot.image.url }}" alt="{{ screenshot.title }} screenshot">
+                {% else %}
+                <img src="{% static screenshot.image_path %}" alt="{{ screenshot.title }} screenshot">
+                {% endif %}
+            </div>
+            <h3>{{ screenshot.title }}</h3>
+            <p>{{ screenshot.caption }}</p>
+        </article>
+        {% empty %}
+        <div class="empty-state">
+            <strong>No screenshots added yet</strong>
+            <p class="mt-2">Add gallery screenshots in the Django admin to deepen the storytelling on this case study.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section-shell">
+    <div class="section-heading">
+        <span class="eyebrow">Related work</span>
+        <h2>Explore additional case studies.</h2>
+    </div>
+    <div class="case-study-grid">
+        {% for case_study in related_case_studies %}
+            {% include 'core/partials/case_study_card.html' with case_study=case_study compact=True %}
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

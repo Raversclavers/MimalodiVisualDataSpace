@@ -1,61 +1,138 @@
 {% extends 'core/base.html' %}
 
 {% block title %}Contact Us - Mimalodi Visual Data Space{% endblock %}
+{% block meta_description %}Start a project conversation with Mimalodi Visual Data Space about dashboards, reporting systems, analytics support, or visual storytelling work.{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <header class="text-center mb-4">
-        <h1>Contact Us</h1>
-        <p>We'd love to hear from you! Please reach out with any questions or feedback.</p>
-    </header>
-
-    <section class="mb-5">
-        <h2>Get in Touch</h2>
-        <form method="post" action="{% url 'contact' %}">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+<section class="hero-panel">
+    <div class="row align-items-center g-4 g-lg-5">
+        <div class="col-lg-6">
+            <span class="eyebrow">Start the conversation</span>
+            <h1 class="mb-3">Tell me where the reporting friction is and what better clarity would unlock.</h1>
+            <p class="lead">If you need a stronger dashboard, a cleaner reporting structure, or sharper visual communication for a high-visibility project, send a concise brief and I will take it from there.</p>
+            <div class="hero-meta mt-4">
+                <div class="metric-card">
+                    <span class="metric-label">Response window</span>
+                    <span class="metric-value">Usually within 1 to 2 business days</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-label">Best for</span>
+                    <span class="metric-value">Reporting redesigns, dashboard work, analytics support, and consulting inquiries</span>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+            <div class="form-meta-grid">
+                <div class="form-meta-card">
+                    <strong>Best starting point</strong>
+                    <p>A short brief with your reporting challenge, audience, and deadline.</p>
+                </div>
+                <div class="form-meta-card">
+                    <strong>Typical projects</strong>
+                    <p>KPI reviews, dashboard redesigns, visual insight packs, and reporting cleanup.</p>
+                </div>
+                <div class="form-meta-card">
+                    <strong>Preferred tone</strong>
+                    <p>Clear, direct, and specific so the first reply can be useful immediately.</p>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="message" class="form-label">Message</label>
-                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+        </div>
+        <div class="col-lg-6">
+            <div class="surface-panel form-card">
+                <div class="section-heading mb-4">
+                    <span class="section-kicker">Project inquiry</span>
+                    <h2>Contact form</h2>
+                    <p>Share your objective, timeline, and the kind of support you want so the response can be more precise from the start.</p>
+                    {% if selected_service %}
+                    <p class="form-note">You are inquiring about <strong>{{ selected_service.title }}</strong>. The subject line has already been prepared for a faster handoff.</p>
+                    {% endif %}
+                </div>
+                <form method="post" action="{% url 'contact' %}" novalidate aria-describedby="contact-form-help{% if form.errors %} contact-form-errors{% endif %}">
+                    {% csrf_token %}
+                    <p id="contact-form-help" class="form-note">All fields are required. Stronger context usually leads to a faster and more actionable first reply.</p>
+                    {% if form.errors %}
+                    <div id="contact-form-errors" class="form-error-summary" role="alert">
+                        <h3>Please correct the following issues</h3>
+                        <ul>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">Name <span class="required-indicator" aria-hidden="true">*</span></label>
+                            {{ form.name }}
+                            {% if form.name.errors %}<div id="id_name-error" class="field-error" role="alert">{{ form.name.errors|join:', ' }}</div>{% endif %}
+                        </div>
+                        <div class="form-field">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">Email <span class="required-indicator" aria-hidden="true">*</span></label>
+                            {{ form.email }}
+                            {% if form.email.errors %}<div id="id_email-error" class="field-error" role="alert">{{ form.email.errors|join:', ' }}</div>{% endif %}
+                        </div>
+                    </div>
+                    <div class="form-field mt-3">
+                        <label for="{{ form.subject.id_for_label }}" class="form-label">Subject <span class="required-indicator" aria-hidden="true">*</span></label>
+                        {{ form.subject }}
+                        {% if form.subject.errors %}<div id="id_subject-error" class="field-error" role="alert">{{ form.subject.errors|join:', ' }}</div>{% endif %}
+                    </div>
+                    <div class="form-field mt-3">
+                        <label for="{{ form.message.id_for_label }}" class="form-label">Message <span class="required-indicator" aria-hidden="true">*</span></label>
+                        {{ form.message }}
+                        {% if form.message.errors %}<div id="id_message-error" class="field-error" role="alert">{{ form.message.errors|join:', ' }}</div>{% endif %}
+                    </div>
+                    {% if form.non_field_errors %}
+                    <div class="field-error mt-3" role="alert">{{ form.non_field_errors|join:', ' }}</div>
+                    {% endif %}
+                    <div class="cta-actions mt-4">
+                        <button type="submit" class="btn btn-primary">Send project inquiry</button>
+                        <a href="mailto:info@mimalodivisualdataspace.com" class="btn btn-outline-primary">Prefer email? Write directly</a>
+                    </div>
+                </form>
             </div>
-            <button type="submit" class="btn btn-primary">Send Message</button>
-        </form>
-    </section>
+        </div>
+    </div>
+</section>
 
-    <section class="mb-5">
-        <h2>Direct Contact Information</h2>
-        <p>If you prefer to reach out directly, you can contact us at:</p>
-        <ul>
-            <li><strong>Email:</strong> <a href="mailto:info@mimalodivisualdataspace.com">info@mimalodivisualdataspace.com</a></li>
-            <li><strong>Phone:</strong> +1 (234) 567-8901</li>
-            <li><strong>Follow us on social media:</strong></li>
-            <li>
-                <a href="https://twitter.com/yourprofile" target="_blank">Twitter</a> |
-                <a href="https://facebook.com/yourprofile" target="_blank">Facebook</a> |
-                <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a>
-            </li>
-        </ul>
-    </section>
+<section class="section-shell">
+    <div class="feature-grid">
+        <article class="feature-card">
+            <div class="feature-icon"><i class="fas fa-briefcase" aria-hidden="true"></i></div>
+            <h3>Business reporting support</h3>
+            <p>Ideal for founders, consultants, internal teams, and organizations that need reporting that feels calmer, sharper, and more defensible.</p>
+        </article>
+        <article class="feature-card">
+            <div class="feature-icon"><i class="fas fa-comments" aria-hidden="true"></i></div>
+            <h3>Simple first step</h3>
+            <p>You do not need a fully scoped brief. A direct summary of the problem, the audience, and the urgency is enough to begin well.</p>
+        </article>
+        <article class="feature-card">
+            <div class="feature-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></div>
+            <h3>Secure and straightforward</h3>
+            <p>Your inquiry is stored in Django admin for follow-up, which keeps the workflow direct and avoids reliance on external form tools.</p>
+        </article>
+    </div>
+</section>
 
-    <section>
-        <h2>Our Location</h2>
-        <p>Find us at our physical location:</p>
-        <!-- Optional: Embed a Google Map -->
-        <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509123!2d144.9537353153164!3d-37.81627997975157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642af0f11f1b3%3A0x5045675218ceed0!2sYour%20Location!5e0!3m2!1sen!2sau!4v1616161616161!5m2!1sen!2sau" 
-            width="600" 
-            height="450" 
-            style="border:0;" 
-            allowfullscreen="" 
-            loading="lazy">
-        </iframe>
-    </section>
-</div>
+<section class="section-shell">
+    <div class="surface-panel">
+        <div class="row g-4 align-items-start">
+            <div class="col-lg-7">
+                <span class="eyebrow">What to include</span>
+                <h2 class="mt-3">The stronger the context, the sharper the first reply.</h2>
+                <p>Helpful details include the reporting challenge, the kind of dashboard or deliverable you need, who the audience is, and any deadline or review moment you are working toward.</p>
+            </div>
+            <div class="col-lg-5">
+                <div class="contact-prompt">
+                    <strong>Typical inquiries</strong>
+                    <p class="mt-2">Executive dashboards, KPI reporting redesigns, investor-ready visual summaries, insight packs, analytics consulting, and data storytelling support.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

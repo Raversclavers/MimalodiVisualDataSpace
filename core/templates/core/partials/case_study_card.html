@@ -1,0 +1,52 @@
+{% load static %}
+<article class="case-study-card {% if compact %}case-study-card-compact{% endif %}">
+    <div class="case-study-media">
+        {% if case_study.hero_image %}
+        <img src="{{ case_study.hero_image.url }}" alt="{{ case_study.title }} case study preview">
+        {% else %}
+        <img src="{% static case_study.hero_image_path %}" alt="{{ case_study.title }} case study preview">
+        {% endif %}
+    </div>
+    <div class="case-study-content">
+        <div class="content-card-meta">
+            <span>{{ case_study.category }}</span>
+            <span>{{ case_study.accent }}</span>
+        </div>
+        <h3>{{ case_study.title }}</h3>
+        {% if case_study.summary %}
+        <p>{{ case_study.summary }}</p>
+        {% endif %}
+        <div class="case-study-section">
+            <span class="case-study-label">Context</span>
+            <p>{{ case_study.client_context }}</p>
+        </div>
+        <div class="case-study-section">
+            <span class="case-study-label">Approach</span>
+            <p>{{ case_study.approach }}</p>
+        </div>
+        {% if not compact %}
+        <div class="case-study-section">
+            <span class="case-study-label">Tools used</span>
+            <div class="tag-list">
+                {% for tool in case_study.tools_list %}
+                <span class="tag-pill">{{ tool }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        <div class="case-study-section case-study-result">
+            <span class="case-study-label">Outcome</span>
+            <p>{{ case_study.result }}</p>
+        </div>
+        {% if compact %}
+        <div class="tag-list">
+            {% for tool in case_study.tools_list|slice:':3' %}
+            <span class="tag-pill">{{ tool }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div>
+            <a href="{{ case_study.get_absolute_url }}" class="btn btn-outline-primary">Read the case study<span class="visually-hidden">: {{ case_study.title }}</span></a>
+        </div>
+    </div>
+</article>

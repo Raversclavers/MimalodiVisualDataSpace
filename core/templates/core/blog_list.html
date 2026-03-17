@@ -13,7 +13,6 @@
         {% for post in posts %}
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm h-100">
-                <img src="{{ post.thumbnail.url }}" class="card-img-top" alt="{{ post.title }}">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title text-primary">{{ post.title }}</h5>
                     <p class="card-text text-muted">{{ post.excerpt }}</p>
@@ -22,7 +21,7 @@
                     </div>
                 </div>
                 <div class="card-footer text-muted small">
-                    Posted on {{ post.created_at|date:"M d, Y" }} by {{ post.author }}
+                    Posted on {{ post.created_at|date:"M d, Y" }}
                 </div>
             </div>
         </div>
