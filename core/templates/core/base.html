@@ -48,9 +48,8 @@
                         <li class="nav-item"><a class="nav-link{% if request.resolver_match.url_name == 'tutorials' %} active{% endif %}" href="{% url 'tutorials' %}"{% if request.resolver_match.url_name == 'tutorials' %} aria-current="page"{% endif %}>Tutorials</a></li>
                         <li class="nav-item"><a class="nav-link{% if request.resolver_match.url_name == 'visualizations' %} active{% endif %}" href="{% url 'visualizations' %}"{% if request.resolver_match.url_name == 'visualizations' %} aria-current="page"{% endif %}>Visualizations</a></li>
                     </ul>
-                    <ul class="navbar-nav ms-auto" aria-label="Account and contact links">
+                    <ul class="navbar-nav ms-auto" aria-label="Contact and account links">
                         {% if user.is_authenticated %}
-                            <li class="nav-item"><span class="nav-link nav-link-static">Signed in as {{ user.username }}</span></li>
                             <li class="nav-item"><a class="nav-link{% if request.resolver_match.url_name == 'profile' %} active{% endif %}" href="{% url 'profile' %}"{% if request.resolver_match.url_name == 'profile' %} aria-current="page"{% endif %}>Profile</a></li>
                             <li class="nav-item">
                                 <form method="POST" action="{% url 'logout' %}" class="nav-inline-form">
@@ -58,10 +57,8 @@
                                     <button type="submit" class="btn btn-link nav-link">Log out</button>
                                 </form>
                             </li>
-                        {% else %}
-                            <li class="nav-item"><a class="nav-link{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'signup' %} active{% endif %}" href="{% url 'login' %}"{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'signup' %} aria-current="page"{% endif %}>Account</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Start a project conversation</a></li>
+                        <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm ms-lg-2" href="{% url 'contact' %}">Get in touch</a></li>
                     </ul>
                 </div>
             </div>
@@ -96,12 +93,12 @@
                     </div>
                 </div>
                 <div>
-                    <h6>Connect</h6>
-                    <div class="social-links">
-                        <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Mimalodi Visual Data Space on LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i> LinkedIn</a>
-                        <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Mimalodi Visual Data Space on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i> Twitter</a>
-                        <a href="mailto:info@mimalodivisualdataspace.com" aria-label="Email Mimalodi Visual Data Space"><i class="fas fa-envelope" aria-hidden="true"></i> Email</a>
+                    <h6>Get in touch</h6>
+                    <div class="footer-links">
+                        <a href="{% url 'contact' %}"><i class="fas fa-paper-plane" aria-hidden="true"></i> Start a project inquiry</a>
+                        <a href="mailto:hello@mimalodivisualdataspace.com" aria-label="Email Mimalodi Visual Data Space"><i class="fas fa-envelope" aria-hidden="true"></i> hello@mimalodivisualdataspace.com</a>
                     </div>
+                    <p class="mt-3" style="font-size: 0.85rem;">Based in South Africa. Available for remote work worldwide.</p>
                 </div>
             </div>
             <div class="footer-note">
