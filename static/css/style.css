@@ -1102,6 +1102,96 @@ body {
     border-color: rgba(16, 32, 51, 0.07);
 }
 
+/* ─── Founder section ─── */
+.founder-portrait-wrap {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    border: 3px solid rgba(47, 109, 246, 0.12);
+}
+
+.founder-portrait {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    display: block;
+}
+
+.founder-skills .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.founder-skills .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    background: rgba(47, 109, 246, 0.07);
+    color: var(--text);
+    border: 1px solid rgba(47, 109, 246, 0.1);
+}
+
+.highlight-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+}
+
+.highlight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(241, 247, 255, 0.92) 100%);
+    border: 1px solid rgba(47, 109, 246, 0.08);
+}
+
+.highlight-item i {
+    flex-shrink: 0;
+    width: 1.4rem;
+    margin-top: 0.15rem;
+    color: var(--brand);
+    font-size: 0.95rem;
+}
+
+.highlight-item span {
+    font-size: 0.92rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+}
+
+.founder-focus {
+    background: linear-gradient(180deg, rgba(56, 198, 164, 0.06) 0%, rgba(47, 109, 246, 0.04) 100%);
+    border: 1px solid rgba(56, 198, 164, 0.14);
+}
+
+/* Founder preview on homepage */
+.founder-preview {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+    align-items: center;
+}
+
+.founder-preview-portrait {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(47, 109, 246, 0.12);
+    box-shadow: var(--shadow-md);
+}
+
+.founder-preview-copy .eyebrow {
+    margin-bottom: 0.5rem;
+}
+
 @media (max-width: 991.98px) {
     .hero-signature-grid,
     .form-meta-grid,
@@ -1143,6 +1233,16 @@ body {
 }
 
 @media (max-width: 767.98px) {
+    .founder-preview {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1.2rem;
+    }
+
+    .founder-preview-portrait {
+        margin: 0 auto;
+    }
+
     .page-content {
         padding-top: 1.25rem;
     }
